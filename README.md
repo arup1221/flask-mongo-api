@@ -14,7 +14,7 @@
 ```bash
   pip freeze > requirements.txt
 ```
-<p>Activate the Virtual environment</p>
+###Activate the Virtual environment
 
 on windows
 ```bash
@@ -25,7 +25,7 @@ on mac/linux
   source venv/bin/activate
 ```
 
-<p>Run the application</p>
+###<p>Run the application</p>
 
 ```bash
   flask run
