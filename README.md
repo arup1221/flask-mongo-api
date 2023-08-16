@@ -38,3 +38,15 @@ or (mac/linux)
 ```bash
     python3 app.py
 ```
+## For Use with docker
+<p>first create the Docker image </p>
+
+```bash
+  docker build -t myapp-image .
+```
+
+<p>Then Run the Image</p>
+
+```bash
+  Docker run -p 8000:8000 myapp-image
+```
