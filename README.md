@@ -4,3 +4,37 @@
 ```bash
   git clone https://github.com/arup1221/flask-mongo-api.git
 ```
+<p>Go to the Directory in your code editor and then Create virtual environment</p>
+
+```bash
+  python -m venv venv
+```
+<p>Update the requrirement.txt (if needed)</p>
+
+```bash
+  pip freeze > requirements.txt
+```
+<p>Activate the Virtual environment</p>
+
+on windows
+```bash
+  venv\Scripts\activate
+```
+on mac/linux
+```bash
+  source venv/bin/activate
+```
+
+<p>Run the application</p>
+
+```bash
+  flask run
+```
+or (windows) 
+```bash
+py app.py
+```
+or (mac/linux)
+```bash
+    python3 app.py
+```
