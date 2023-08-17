@@ -5,6 +5,7 @@ from flask import request
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash
 from bson.objectid import ObjectId
+from users.routes import users_blueprint
 
 app = Flask(__name__)
 
@@ -15,88 +16,14 @@ app.config['MONGO_URI'] = 'mongodb+srv://arup:arup2345@cluster0.131i8tz.mongodb.
 
 mongo = PyMongo(app)
 
+users_blueprint.mongo = mongo
+app.register_blueprint(users_blueprint, url_prefix='/code')
+mongo.init_app
+
 
 @app.route('/', methods=['GET'])
 def welcome():
     return '<h1>Welcome to the CRUD api With Flask and MongoDB</h1>', 200
-
-
-@app.route('/users', methods=['POST'])  # endpoint /users
-def add_user():
-    _json = request.json
-    _name = _json['name']
-    _email = _json['email']
-    _password = _json['password']
-
-    if _name and _email and _password and request.method == 'POST':
-        _hashed_password = generate_password_hash(_password)
-
-        user = {
-            'name': _name,
-            'email': _email,
-            'password': _hashed_password
-        }
-
-        id = mongo.db.users.insert_one(user).inserted_id
-
-        resp = jsonify({"message": "User added successfully", "id": str(id)})
-        resp.status_code = 200
-        return resp
-    else:
-        return not_found(400)
-
-
-@app.route('/users', methods=['GET'])  # endpoin /users
-def get_all_users():
-    users = mongo.db.users.find()
-    user_list = []
-    for user in users:
-        user['_id'] = str(user['_id'])
-        user_list.append(user)
-    return jsonify(users=user_list)
-
-
-@app.route('/users/<id>', methods=['GET'])  # endpoint /users/<id>
-def get_user_by_id(id):
-    user = mongo.db.users.find_one({'_id': ObjectId(id)})
-    if user:
-        user['_id'] = str(user['_id'])
-        return jsonify(user)
-    else:
-        return not_found(404)
-
-
-@app.route('/users/<id>', methods=['PUT'])  # endpoint /users/<id>
-def update_user(id):
-    _json = request.json
-    _name = _json['name']
-    _email = _json['email']
-    _password = _json['password']
-
-    if _name and _email and _password and request.method == 'PUT':
-        _hashed_password = generate_password_hash(_password)
-
-        mongo.db.users.update_one(
-            {'_id': ObjectId(id)},
-            {'$set': {'name': _name, 'email': _email, 'password': _hashed_password}}
-        )
-
-        resp = jsonify(message="User updated successfully")
-        resp.status_code = 200
-        return resp
-    else:
-        return not_found(400)
-
-
-@app.route('/users/<id>', methods=['DELETE'])  # endpoint /users/<id>
-def delete_user(id):
-    result = mongo.db.users.delete_one({'_id': ObjectId(id)})
-    if result.deleted_count > 0:
-        resp = jsonify(message="User deleted successfully")
-        resp.status_code = 200
-        return resp
-    else:
-        return not_found(404)
 
 
 @app.errorhandler(400)
